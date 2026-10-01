@@ -1,0 +1,102 @@
+name: Replace Macrowan Website
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find Macrowan ZIP
+        id: zip
+        shell: bash
+        run: |
+          ZIP_FILE=$(find . -maxdepth 1 -type f -name "Macrowan-catalogue-cart-v2.zip" | head -1)
+
+          if [ -z "$ZIP_FILE" ]; then
+            echo "ERROR: Macrowan-catalogue-cart-v2.zip not found in repository root."
+            exit 1
+          fi
+
+          echo "Found: $ZIP_FILE"
+          echo "zip_file=$ZIP_FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Extract new project
+        id: extract
+        shell: bash
+        run: |
+          rm -rf /tmp/macrowan-project
+          mkdir -p /tmp/macrowan-project
+
+          unzip -q "${{ steps.zip.outputs.zip_file }}" -d /tmp/macrowan-project
+
+      - name: Find project root
+        id: project
+        shell: bash
+        run: |
+          PROJECT_DIR=$(find /tmp/macrowan-project \
+            -type f \
+            -name "package.json" \
+            -printf '%h\n' | head -1)
+
+          if [ -z "$PROJECT_DIR" ]; then
+            echo "ERROR: package.json was not found."
+            exit 1
+          fi
+
+          echo "Project root: $PROJECT_DIR"
+          echo "project_dir=$PROJECT_DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Remove old website
+        shell: bash
+        run: |
+          find . -mindepth 1 -maxdepth 1 \
+            ! -name ".git" \
+            ! -name "Macrowan-catalogue-cart-v2.zip" \
+            -exec rm -rf {} +
+
+      - name: Copy new website
+        shell: bash
+        run: |
+          PROJECT_DIR="${{ steps.project.outputs.project_dir }}"
+          cp -a "$PROJECT_DIR"/. .
+
+      - name: Remove ZIP
+        shell: bash
+        run: |
+          rm -f Macrowan-catalogue-cart-v2.zip
+
+      - name: Verify new project
+        shell: bash
+        run: |
+          test -f package.json
+          test -f index.html
+          test -d src
+
+          echo "Macrowan website verification successful."
+
+      - name: Commit replacement
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          git status --short
+
+          if git diff --cached --quiet; then
+            echo "No changes detected."
+            exit 1
+          fi
+
+          git commit -m "Replace Macrowan with catalogue and cart"
+
+          git push
