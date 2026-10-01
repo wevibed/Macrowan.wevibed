@@ -14,6 +14,11 @@ const img = {
   tools: "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=900&q=85",
   solar: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=900&q=85",
   gas: "https://images.unsplash.com/photo-1604948501466-4e9c339b9c24?auto=format&fit=crop&w=900&q=85",
+  gasCylinder: "https://bina-sh.en.made-in-china.com/product/FOuACkbvkcYr/China-Large-Capacity-Gas-Tank-20kg-LPG-Cylinder-for-Industry-Use.html",
+  gasRegulator: "https://cgas-chen.en.made-in-china.com/product/avUEILxAWrVJ/China-LPG-Compact-Low-Pressure-Gas-Regulator-C10G59U37-.html",
+  gasHose: "https://tiimg.tistatic.com/fp/1/007/515/-long-lasting-and-flexible-orange-colour-rubber-lpg-gas-pipe-for-gas-cylinder-263.jpg",
+  floodLight: "https://www.silkled.com/uploads/202309/60w-solar-flood-light.jpg",
+  tileCutter: "https://esemall.com/cdn/shop/files/Tile_Cutter_800mm_JADEVER_JDTR1508.jpg?v=1786967249&width=1780",
   audio: "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=900&q=85",
   paint: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=900&q=85"
 };
@@ -26,35 +31,35 @@ const products = [
   { id: 5, name: "2-Plate Gas Stove with Oven", category: "Gas & Cooking", price: 55, image: img.stove, keywords: "2 plate gas stove oven cooker two burner" },
   { id: 6, name: "Gas Regulator", category: "Gas & Cooking", price: 4.5, image: img.gas, keywords: "gas regulator regulator lpg" },
   { id: 7, name: "Gas Plate", category: "Gas & Cooking", price: 3, image: img.stove, keywords: "gas plate burner cooker" },
-  { id: 8, name: "Gas Pipe", category: "Gas & Cooking", price: 1, unit: "per metre", image: img.gas, keywords: "gas pipe hose lpg pipe metre meter" },
+  { id: 8, name: "Gas Pipe", category: "Gas & Cooking", price: 1, unit: "per metre", image: img.gasHose, keywords: "gas pipe hose lpg pipe metre meter" },
   { id: 9, name: "Skimming Plaster (Polyset Plaster)", category: "Building Materials", price: 13, image: img.building, keywords: "skimming plaster polyset plaster wall finish" },
   { id: 10, name: "Paint Contractors (Polyda)", category: "Building Materials", price: 18, image: img.paint, keywords: "paint contractors polyda paint" },
   { id: 11, name: "Porcelain Tile Adhesive (Elephant)", category: "Building Materials", price: 2.9, image: img.building, keywords: "porcelain tile adhesive elephant tiles glue" },
   { id: 12, name: "345W Solar Panel", category: "Solar", price: 50, image: img.solar, keywords: "solar panel 345w 345 watt photovoltaic" },
   { id: 13, name: "30A Solar Controller", category: "Solar", price: 10, image: img.solar, keywords: "solar controller 30a 30 amps charge controller" },
   { id: 14, name: "60A MPPT Solar Controller", category: "Solar", price: 55, image: img.solar, keywords: "solar controller 60a 60 amps mppt charge controller" },
-  { id: 15, name: "Solar Flood Light", category: "Solar", price: 8, priceLabel: "$8–$15", unit: "10W–60W", image: img.solar, keywords: "solar flood light 10w 20w 30w 40w 50w 60w" },
+  { id: 15, name: "Solar Flood Light", category: "Solar", price: 8, priceLabel: "$8–$15", unit: "10W–60W", image: img.floodLight, keywords: "solar flood light 10w 20w 30w 40w 50w 60w" },
   { id: 16, name: "AC 30W", category: "Electrical", price: 5.9, image: img.electrical, keywords: "ac 30w light electrical" },
   { id: 17, name: "AC 20W", category: "Electrical", price: 5, image: img.electrical, keywords: "ac 20w light electrical" },
   { id: 18, name: "Adapters", category: "Electrical", price: 4, image: img.electrical, keywords: "adapter adapters plug electrical" },
   { id: 19, name: "Cordless Spray Gun AC", category: "Power Tools", price: 35, image: img.tools, keywords: "cordless spray gun ac paint sprayer" },
   { id: 20, name: "Cordless Baby Grinder Jadever", category: "Power Tools", price: 84.5, image: img.tools, keywords: "cordless baby grinder jadever mini grinder" },
   { id: 21, name: "Angle Grinder Jadever", category: "Power Tools", price: 75, image: img.tools, keywords: "angle grinder jadever grinder" },
-  { id: 22, name: "Tile Cutter Jadever 800mm", category: "Power Tools", price: 70, image: img.tools, keywords: "tile cutter jadever 800mm 800 mm tiles" },
+  { id: 22, name: "Tile Cutter Jadever 800mm", category: "Power Tools", price: 70, image: img.tileCutter, keywords: "tile cutter jadever 800mm 800 mm tiles" },
   { id: 23, name: "Electric Wood Planer", category: "Power Tools", price: 45, image: img.tools, keywords: "electric wood planer woodworking planer" },
   { id: 24, name: "Cordless Grass Trimmer Jadever", category: "Power Tools", price: 70, image: img.tools, keywords: "cordless grass trimmer jadever weed eater" },
   { id: 25, name: "Chainsaw Jadever 18\"", category: "Power Tools", price: 95, image: img.tools, keywords: "chainsaw jadever 18 inch 18\" saw" },
-  { id: 26, name: "JBL Double Bass Bin", category: "PA Systems & Audio", price: 600, image: img.audio, keywords: "jbl double bass bin speaker pa system" },
-  { id: 27, name: "15\" Single JBL Speaker", category: "PA Systems & Audio", price: 220, unit: "each", image: img.audio, keywords: "15 inch single jbl speaker pa" },
-  { id: 28, name: "15\" Double JBL Speaker", category: "PA Systems & Audio", price: 350, image: img.audio, keywords: "15 inch double jbl speaker pa" },
-  { id: 29, name: "CA 80 Amplifier + Crossover", category: "PA Systems & Audio", price: 400, image: img.audio, keywords: "ca 80 amplifier crossover amp pa" },
-  { id: 30, name: "Non-Powered Hybrid 6-Channel Mixer", category: "PA Systems & Audio", price: 200, image: img.audio, keywords: "non powered hybrid 6 channel mixer mixer" },
-  { id: 31, name: "Powered Vision 6-Channel Mixer", category: "PA Systems & Audio", price: 120, image: img.audio, keywords: "powered vision 6 channel mixer mixer" },
-  { id: 32, name: "Subwoofer", category: "PA Systems & Audio", price: 40, priceLabel: "$40–$150", unit: "depending on size", image: img.audio, keywords: "subwoofer bass speaker woofer sound" },
-  { id: 33, name: "Sound Bar", category: "PA Systems & Audio", price: 60, priceLabel: "$60–$85", unit: "depending on size", image: img.audio, keywords: "soundbar sound bar speaker audio" }
+  { id: 26, name: "JBL Double Bass Bin", category: "PA Systems", price: 600, image: img.audio, keywords: "jbl double bass bin speaker pa system" },
+  { id: 27, name: "15\" Single JBL Speaker", category: "PA Systems", price: 220, unit: "each", image: img.audio, keywords: "15 inch single jbl speaker pa" },
+  { id: 28, name: "15\" Double JBL Speaker", category: "PA Systems", price: 350, image: img.audio, keywords: "15 inch double jbl speaker pa" },
+  { id: 29, name: "CA 80 Amplifier + Crossover", category: "PA Systems", price: 400, image: img.audio, keywords: "ca 80 amplifier crossover amp pa" },
+  { id: 30, name: "Non-Powered Hybrid 6-Channel Mixer", category: "PA Systems", price: 200, image: img.audio, keywords: "non powered hybrid 6 channel mixer mixer" },
+  { id: 31, name: "Powered Vision 6-Channel Mixer", category: "PA Systems", price: 120, image: img.audio, keywords: "powered vision 6 channel mixer mixer" },
+  { id: 32, name: "Subwoofer", category: "Audio", price: 40, priceLabel: "$40–$150", unit: "depending on size", image: img.audio, keywords: "subwoofer bass speaker woofer sound" },
+  { id: 33, name: "Sound Bar", category: "Audio", price: 60, priceLabel: "$60–$85", unit: "depending on size", image: img.audio, keywords: "soundbar sound bar speaker audio" }
 ];
 
-const categories = ["All", "Gas & Cooking", "Building Materials", "Solar", "Electrical", "Power Tools", "PA Systems & Audio"];
+const categories = ["All", "Gas & Cooking", "Building Materials", "Solar", "Electrical", "Power Tools", "PA Systems", "Audio"];
 
 const money = (n) => `$${Number(n).toFixed(2).replace(/\.00$/, "")}`;
 
@@ -138,7 +143,8 @@ function App(){
         <Category image={img.solar} title="Solar" onClick={() => {setCategory("Solar"); document.getElementById("products")?.scrollIntoView()}}/>
         <Category image={img.electrical} title="Electrical" onClick={() => {setCategory("Electrical"); document.getElementById("products")?.scrollIntoView()}}/>
         <Category image={img.tools} title="Power Tools" onClick={() => {setCategory("Power Tools"); document.getElementById("products")?.scrollIntoView()}}/>
-        <Category image={img.audio} title="PA Systems & Audio" onClick={() => {setCategory("PA Systems & Audio"); document.getElementById("products")?.scrollIntoView()}}/>
+        <Category image={img.audio} title="PA Systems" onClick={() => {setCategory("PA Systems"); document.getElementById("products")?.scrollIntoView()}}/>
+        <Category image={img.audio} title="Audio" onClick={() => {setCategory("Audio"); document.getElementById("products")?.scrollIntoView()}}/>
       </div></section>
 
       <section id="products" className="section productsSection"><div className="heading"><div><p className="eyebrow orange">MACROWAN CATALOGUE</p><h2>Products & prices.</h2></div><button className="cartTop" onClick={() => setCartOpen(true)}>🛒 Cart ({cartCount})</button></div>
@@ -153,7 +159,7 @@ function App(){
 
       <section className="services"><div className="heading"><div><p className="eyebrow orange">HOW IT WORKS</p><h2>Browse. Add. Message.</h2></div></div><div className="serviceGrid"><div><b>01</b><h3>Find products</h3><p>Search the catalogue or filter by category.</p></div><div><b>02</b><h3>Add to cart</h3><p>Select quantities and review your estimated total.</p></div><div><b>03</b><h3>Message Macrowan</h3><p>Your product names, quantities and total are prepared in WhatsApp.</p></div></div></section>
 
-      <section id="contact" className="contact"><div><p className="eyebrow orange">VISIT MACROWAN HARDWARE</p><h2>Find the store.</h2><p>Visit Macrowan Hardware in the Mandedza area or message the shop before you come.</p><a className="btn" href={`https://wa.me/${phone}?text=${encodeURIComponent("Hello Macrowan Hardware, I would like to visit your store. Please confirm the location.")}`}>MESSAGE ON WHATSAPP →</a><p className="phone">077 740 4044</p></div><a className="mapPlaceholder" href={mapUrl} target="_blank" rel="noreferrer"><div className="pin">●</div><strong>Macrowan Hardware</strong><span>Mandedza • Open in Google Maps</span><span className="mapButton">VIEW ON MAP →</span></a></section>
+      <section id="contact" className="contact"><div><p className="eyebrow orange">VISIT MACROWAN HARDWARE</p><h2>Find the store.</h2><p>Use the map below for the store location, or message the shop before you come.</p><a className="btn" href={`https://wa.me/${phone}?text=${encodeURIComponent("Hello Macrowan Hardware, I would like to visit your store. Please confirm the location.")}`}>MESSAGE ON WHATSAPP →</a><p className="phone">077 740 4044</p></div><a className="mapPlaceholder" href={mapUrl} target="_blank" rel="noreferrer"><div className="pin">●</div><strong>Macrowan Hardware</strong><span>Store location • Open in Google Maps</span><span className="mapButton">VIEW ON MAP →</span></a></section>
     </main>
     <footer><div className="brand"><span className="logo">⌂</span><span>MACROWAN<small>HARDWARE</small></span></div><p>Gas • Building • Solar • Electrical • Power Tools • PA Systems</p><p>© 2026 Macrowan Hardware</p></footer>
     <FloatingWhatsApp/>
