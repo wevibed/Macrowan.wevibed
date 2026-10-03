@@ -15,34 +15,67 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up unzip and rsync
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y unzip rsync
-
-      - name: Extract replacement ZIP
+      - name: Locate and validate replacement ZIP
+        id: archive
         shell: bash
         run: |
           set -euo pipefail
 
-          ZIP_FILE="Macrowan_Final_Repository.zip"
+          echo "Files in repository root:"
+          find . -maxdepth 2 -type f -not -path './.git/*' -printf '%p\n' | sort
 
-          if [ ! -f "$ZIP_FILE" ]; then
-            echo "::error::Missing $ZIP_FILE. Upload the repository ZIP to the root of this GitHub repository first."
+          # Find a ZIP anywhere in the checked-out repository, ignoring the workflow itself.
+          mapfile -t ZIP_FILES < <(
+            find . -type f \( -iname '*.zip' \) \
+              -not -path './.git/*' \
+              -not -path './node_modules/*' \
+              -print | sort
+          )
+
+          if [ "${#ZIP_FILES[@]}" -eq 0 ]; then
+            echo "::error::No .zip file was found in the repository checkout. Make sure the uploaded ZIP is committed to the main branch, not just selected in the GitHub upload screen."
             exit 1
           fi
 
-          rm -rf /tmp/macrowan-replacement
+          echo "ZIP files found:"
+          printf ' - %s\n' "${ZIP_FILES[@]}"
+
+          # Prefer the expected filename; otherwise use the newest/first ZIP found.
+          ZIP_PATH=""
+          for candidate in "${ZIP_FILES[@]}"; do
+            if [[ "$(basename "$candidate" | tr '[:upper:]' '[:lower:]')" == "macrowan_final_repository.zip" ]]; then
+              ZIP_PATH="$candidate"
+              break
+            fi
+          done
+          if [ -z "$ZIP_PATH" ]; then
+            if [ "${#ZIP_FILES[@]}" -gt 1 ]; then
+              echo "::error::More than one ZIP was found and none is named Macrowan_Final_Repository.zip. Rename the intended archive to Macrowan_Final_Repository.zip, commit it, and run again."
+              exit 1
+            fi
+            ZIP_PATH="${ZIP_FILES[0]}"
+          fi
+
+          echo "Using archive: $ZIP_PATH"
+          unzip -t "$ZIP_PATH"
+
           mkdir -p /tmp/macrowan-replacement
-          unzip -q "$ZIP_FILE" -d /tmp/macrowan-replacement
+          unzip -q "$ZIP_PATH" -d /tmp/macrowan-replacement
 
-          # Find the project root in case the ZIP contains one enclosing folder.
-          PROJECT_ROOT="$(find /tmp/macrowan-replacement -name package.json -type f -print -quit | xargs -r dirname)"
-          if [ -z "${PROJECT_ROOT:-}" ] || [ ! -f "$PROJECT_ROOT/package.json" ]; then
-            echo "::error::Could not find package.json in the ZIP. Check that this is the complete React/Vite repository ZIP."
+          # Locate package.json and use its parent directory as the project root.
+          PACKAGE_JSON="$(find /tmp/macrowan-replacement -type f -name package.json -not -path '*/node_modules/*' -print -quit)"
+          if [ -z "$PACKAGE_JSON" ]; then
+            echo "::error::No package.json found in the ZIP. Upload the complete React/Vite repository ZIP."
             exit 1
           fi
 
+          PROJECT_ROOT="$(dirname "$PACKAGE_JSON")"
+          if [ ! -f "$PROJECT_ROOT/index.html" ]; then
+            echo "::error::The detected project root does not contain index.html. The ZIP may not contain the complete Vite app."
+            exit 1
+          fi
+
+          echo "ZIP_PATH=$ZIP_PATH" >> "$GITHUB_ENV"
           echo "PROJECT_ROOT=$PROJECT_ROOT" >> "$GITHUB_ENV"
 
       - name: Replace repository files
@@ -50,14 +83,14 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Keep Git metadata and this workflow while replacing application files.
+          # Preserve Git metadata and workflow files, replace the app from the ZIP.
           rsync -a --delete \
             --exclude='.git/' \
             --exclude='.github/' \
             "$PROJECT_ROOT/" "$GITHUB_WORKSPACE/"
 
-          # The source ZIP is only a transport file; remove it from the repository.
-          rm -f "$GITHUB_WORKSPACE/Macrowan_Final_Repository.zip"
+          # Do not keep the uploaded archive in the live project repository.
+          find "$GITHUB_WORKSPACE" -maxdepth 1 -type f -iname '*.zip' -delete
 
       - name: Commit and push replacement
         shell: bash
