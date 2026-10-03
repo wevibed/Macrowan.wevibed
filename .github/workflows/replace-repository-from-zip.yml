@@ -1,0 +1,74 @@
+name: Replace repository from ZIP
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replace-repository:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up unzip and rsync
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip rsync
+
+      - name: Extract replacement ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ZIP_FILE="Macrowan_Final_Repository.zip"
+
+          if [ ! -f "$ZIP_FILE" ]; then
+            echo "::error::Missing $ZIP_FILE. Upload the repository ZIP to the root of this GitHub repository first."
+            exit 1
+          fi
+
+          rm -rf /tmp/macrowan-replacement
+          mkdir -p /tmp/macrowan-replacement
+          unzip -q "$ZIP_FILE" -d /tmp/macrowan-replacement
+
+          # Find the project root in case the ZIP contains one enclosing folder.
+          PROJECT_ROOT="$(find /tmp/macrowan-replacement -name package.json -type f -print -quit | xargs -r dirname)"
+          if [ -z "${PROJECT_ROOT:-}" ] || [ ! -f "$PROJECT_ROOT/package.json" ]; then
+            echo "::error::Could not find package.json in the ZIP. Check that this is the complete React/Vite repository ZIP."
+            exit 1
+          fi
+
+          echo "PROJECT_ROOT=$PROJECT_ROOT" >> "$GITHUB_ENV"
+
+      - name: Replace repository files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Keep Git metadata and this workflow while replacing application files.
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            "$PROJECT_ROOT/" "$GITHUB_WORKSPACE/"
+
+          # The source ZIP is only a transport file; remove it from the repository.
+          rm -f "$GITHUB_WORKSPACE/Macrowan_Final_Repository.zip"
+
+      - name: Commit and push replacement
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No repository changes detected."
+            exit 0
+          fi
+          git commit -m "Replace repository with complete Macrowan website"
+          git push
